@@ -154,7 +154,7 @@ export default function Onboarding() {
     <div className="relative flex min-h-screen flex-col items-center justify-center bg-muted/30 p-4">
       <Card className="w-full max-w-3xl p-8 shadow-lg">
         <h1 className="mb-2 text-3xl font-bold tracking-tight">Welcome to FinsOpsIQ</h1>
-        <p className="mb-8 text-muted-foreground">Let's get your account set up by onboarding your Azure subscriptions.</p>
+        <p className="mb-8 text-muted-foreground">Let&apos;s get your account set up by onboarding your Azure subscriptions.</p>
 
         {error && (
           <div className="mb-6 rounded-md bg-destructive/15 p-4 text-destructive">
