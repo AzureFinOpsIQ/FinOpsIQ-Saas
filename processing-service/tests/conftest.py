@@ -13,7 +13,7 @@ for path in (_SERVICE_ROOT / "src", _SERVICE_ROOT / "shared-lib"):
     if str(path) not in sys.path:
         sys.path.insert(0, str(path))
 
-from shared_lib.configuration import Settings
+from shared_lib.configuration import Settings  # noqa: E402
 
 
 @pytest.fixture
