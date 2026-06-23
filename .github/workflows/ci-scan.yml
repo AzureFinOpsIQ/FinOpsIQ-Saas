@@ -3,7 +3,7 @@ name: CI Scan
 on:
   pull_request:
     branches:
-      - main
+      - dev
     types:
       - opened
       - reopened
