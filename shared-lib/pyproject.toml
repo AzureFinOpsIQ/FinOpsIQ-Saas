@@ -1,0 +1,12 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "finopsiq-shared-lib"
+version = "0.1.0"
+description = "Internal shared library for FinOpsIQ services"
+requires-python = ">=3.11"
+
+[tool.setuptools.packages.find]
+include = ["shared_lib*"]

@@ -1,8 +1,9 @@
 FROM python:3.11-slim-bookworm AS builder
 WORKDIR /build
-COPY requirements/services/base.txt ./base.txt
-COPY api-gateway/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+COPY base.txt ./base.txt
+COPY shared-lib/ ./shared-lib/
+COPY requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir --prefix=/install ./shared-lib -r requirements.txt
 
 FROM python:3.11-slim-bookworm AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -10,7 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONPATH=/app
 WORKDIR /app
 COPY --from=builder /install /usr/local
-COPY src/ ./src/
+COPY src/src/ ./src/
 RUN useradd --create-home --uid 1000 appuser && chown -R appuser:appuser /app
 USER 1000
 EXPOSE 8000
