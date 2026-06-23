@@ -1,7 +1,8 @@
 FROM python:3.11-slim-bookworm AS builder
 WORKDIR /build
-COPY requirements/services ./requirements/services
-RUN pip install --no-cache-dir --prefix=/install -r requirements/services/auth-service.txt
+COPY requirements/services/base.txt ./base.txt
+COPY collection-service/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.11-slim-bookworm AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -15,4 +16,4 @@ USER 1000
 EXPOSE 8000
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/live')" || exit 1
-CMD ["uvicorn", "src.microservices.auth_service:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "src.microservices.collection_service:app", "--host", "0.0.0.0", "--port", "8000"]

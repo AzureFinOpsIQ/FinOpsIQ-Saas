@@ -123,12 +123,12 @@ Release promotion does not rebuild images.
 | Service | Dockerfile | Context | Helm key |
 |---|---|---|---|
 | frontend | `frontend/Dockerfile` | `frontend` | `frontend` |
-| api-gateway | `services/api-gateway/Dockerfile` | `.` | `apiGateway` |
-| auth-service | `services/auth-service/Dockerfile` | `.` | `auth` |
-| collection-service | `services/collection-service/Dockerfile` | `.` | `collection` |
-| processing-service | `services/processing-service/Dockerfile` | `.` | `processing` |
-| ai-service | `services/ai-service/Dockerfile` | `.` | `ai` |
-| notification-service | `services/notification-service/Dockerfile` | `.` | `notification` |
+| api-gateway | `api-gateway/Dockerfile` | `.` | `apiGateway` |
+| auth-service | `auth-service/Dockerfile` | `.` | `auth` |
+| collection-service | `collection-service/Dockerfile` | `.` | `collection` |
+| processing-service | `processing-service/Dockerfile` | `.` | `processing` |
+| ai-service | `ai-service/Dockerfile` | `.` | `ai` |
+| notification-service | `notification-service/Dockerfile` | `.` | `notification` |
 
 ## Helm Update Strategy
 

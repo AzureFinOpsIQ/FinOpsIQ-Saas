@@ -16,7 +16,6 @@ on:
       - "processing-service/**"
       - "ai-service/**"
       - "notification-service/**"
-      - "services/**"
       - "shared/**"
       - "src/**"
       - "requirements*.txt"
@@ -30,7 +29,7 @@ permissions:
 jobs:
   ci-scan:
     name: Reusable CI Scan
-    uses: AzureFinOpsIQ/FinOPsIQ-Workflows/.github/workflows/app-ci-scan.yml@e5ec970fac670618802628060238838d6177550a
+    uses: AzureFinOpsIQ/FinOPsIQ-Workflows/.github/workflows/app-ci-scan.yml@3a16038fb8b75f5569a0ec884c0598f9294890c7
     with:
       sonar_organization: ${{ vars.SONAR_ORGANIZATION }}
       sonar_project_prefix: ${{ vars.SONAR_PROJECT_PREFIX }}

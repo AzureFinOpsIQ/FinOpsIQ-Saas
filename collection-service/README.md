@@ -1,0 +1,5 @@
+# collection-service
+
+Deployment artifacts for the collection-service microservice.
+
+Application source remains in the repository-level src/ package for Stage 1 refactoring.

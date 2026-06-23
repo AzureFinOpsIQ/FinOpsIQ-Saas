@@ -12,7 +12,7 @@ permissions:
 jobs:
   release-promote:
     name: Reusable Release Promote
-    uses: AzureFinOpsIQ/FinOPsIQ-Workflows/.github/workflows/app-release-promote.yml@63a531810cf233093c2dcd113c6d9d2f3ebd9562
+    uses: AzureFinOpsIQ/FinOPsIQ-Workflows/.github/workflows/app-release-promote.yml@3a16038fb8b75f5569a0ec884c0598f9294890c7
     with:
       acr_login_server: ${{ vars.ACR_LOGIN_SERVER }}
     secrets:

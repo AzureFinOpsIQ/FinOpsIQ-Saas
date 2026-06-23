@@ -1,7 +1,8 @@
 FROM python:3.11-slim-bookworm AS builder
 WORKDIR /build
-COPY requirements/services ./requirements/services
-RUN pip install --no-cache-dir --prefix=/install -r requirements/services/processing-service.txt
+COPY requirements/services/base.txt ./base.txt
+COPY processing-service/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
 FROM python:3.11-slim-bookworm AS runtime
 ENV PYTHONDONTWRITEBYTECODE=1 \
