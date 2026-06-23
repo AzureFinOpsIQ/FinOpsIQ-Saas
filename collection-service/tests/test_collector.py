@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 
 import pandas as pd
@@ -55,7 +54,7 @@ def test_metrics_collector_validates_vm_metrics(test_settings: Settings) -> None
 
 def test_resource_graph_collector_merges_sources(test_settings: Settings) -> None:
     collector = ResourceGraphCollector(test_settings)
-    result = collector.collect()
+    collector.collect()
     envelope = collector.load_latest_envelope()
     assert len(envelope["unattachedDisks"]) >= 1
     assert len(envelope["publicIps"]) >= 1

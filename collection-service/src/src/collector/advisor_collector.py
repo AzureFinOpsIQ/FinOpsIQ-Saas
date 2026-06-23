@@ -23,7 +23,6 @@ class AdvisorCollector(BaseCollector[AdvisorRecommendationsPayload]):
         from shared_lib.security.azure_credentials import get_azure_credential
         from azure.mgmt.advisor import AdvisorManagementClient
         from datetime import datetime, timezone
-        from typing import Any
         import re
 
         credential = self.credential or get_azure_credential()

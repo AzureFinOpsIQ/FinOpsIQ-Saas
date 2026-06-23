@@ -12,16 +12,16 @@ _ROOT = Path(__file__).resolve().parent.parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from src.collector.advisor_collector import AdvisorCollector
-from src.collector.aks_collector import AksCollector
-from src.collector.base import CollectorError, IngestionResult
-from src.collector.cost_collector import CostCollector
-from src.collector.metrics_collector import MetricsCollector
-from src.collector.resource_graph_collector import ResourceGraphCollector
-from shared_lib.configuration import get_settings
-from shared_lib.domain.context import OperationContext
-from shared_lib.domain.models import AzureSubscription, CollectionRun, Tenant
-from shared_lib.storage.factory import create_storage_provider
+from src.collector.advisor_collector import AdvisorCollector  # noqa: E402
+from src.collector.aks_collector import AksCollector  # noqa: E402
+from src.collector.base import CollectorError, IngestionResult  # noqa: E402
+from src.collector.cost_collector import CostCollector  # noqa: E402
+from src.collector.metrics_collector import MetricsCollector  # noqa: E402
+from src.collector.resource_graph_collector import ResourceGraphCollector  # noqa: E402
+from shared_lib.configuration import get_settings  # noqa: E402
+from shared_lib.domain.context import OperationContext  # noqa: E402
+from shared_lib.domain.models import AzureSubscription, CollectionRun, Tenant  # noqa: E402
+from shared_lib.storage.factory import create_storage_provider  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,

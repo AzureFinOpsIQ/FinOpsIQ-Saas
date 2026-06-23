@@ -29,7 +29,6 @@ class CostCollector(BaseCollector[CostDataPayload]):
         from azure.mgmt.costmanagement import CostManagementClient
         from azure.mgmt.costmanagement.models import QueryDefinition, QueryDataset, QueryAggregation, QueryGrouping, QueryTimePeriod
         from datetime import datetime, timezone, timedelta
-        from typing import Any
 
         credential = self.credential or get_azure_credential()
         client = CostManagementClient(credential)
