@@ -2,17 +2,18 @@
 
 from __future__ import annotations
 
+import logging
+
 from fastapi import Body, Request
 
-from src.auth_service.application import AuthApplicationService
 from shared_lib.events.bus import create_event_publisher
 from shared_lib.web.service import service_app
+from src.auth_service.application import AuthApplicationService
 
 app = service_app("auth-service")
 app.state.events = create_event_publisher(app.state.settings)
 app.state.application = AuthApplicationService(app)
 
-import logging
 logger = logging.getLogger(__name__)
 
 @app.on_event("startup")

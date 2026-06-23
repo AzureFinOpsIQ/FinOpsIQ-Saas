@@ -149,15 +149,6 @@ class AuthApplicationService:
             if self.settings.entra_auth_enabled
             else self.settings.frontend_url
         )
-        session_id = None
-        try:
-            # The auth service endpoint is proxied by the gateway. Cookies from
-            # the browser are still available on the request in the microservice
-            # path through FastAPI, but this method historically had no request
-            # argument. Kept for backwards-compatible direct calls below.
-            pass
-        except Exception:
-            session_id = None
         response = RedirectResponse(url, status_code=303)
         response.delete_cookie(SESSION_COOKIE)
         response.delete_cookie("finops_sid")
@@ -422,7 +413,6 @@ class AuthApplicationService:
         ]
 
     async def select_subscriptions(self, request: Request, body: dict):
-        identity = get_identity(request)
         session = self._get_entra_session(request)
         subscription_ids = body.get("subscriptionIds", [])
         if not subscription_ids:
