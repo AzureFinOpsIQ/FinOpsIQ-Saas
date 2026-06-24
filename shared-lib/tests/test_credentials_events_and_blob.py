@@ -236,7 +236,7 @@ def test_event_publisher_factory_and_message_processing_paths():
         abandon_message=lambda message: receiver.abandoned.append(message),
         dead_letter_message=lambda message, **kwargs: receiver.dead.append((message, kwargs)),
     )
-    message = SimpleNamespace(delivery_count=1, __str__=lambda self: event().model_dump_json(by_alias=True))
+    message = SimpleNamespace(delivery_count=1, __str__=lambda self: event().model_dump_json(by_alias=True))  # noqa: F841
     valid_message = event().model_dump_json(by_alias=True)
     process_message(receiver, valid_message, lambda parsed: receiver.completed.append(parsed.event_type))
     assert receiver.completed[-1] == valid_message
