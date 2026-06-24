@@ -1,4 +1,5 @@
 ﻿#Multistage build
+# Rebuild marker: refresh service image tags without changing application behavior.
 FROM python:3.11-slim-bookworm AS builder
 WORKDIR /build
 COPY base.txt ./base.txt
