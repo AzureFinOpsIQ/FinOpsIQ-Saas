@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import importlib
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 from types import SimpleNamespace
 
 import jwt
@@ -10,35 +10,22 @@ from shared_lib.web.service import require_internal
 from src.gateway_service.application import GatewayApplicationService
 
 
-ENTRYPOINTS = {
-    "src.microservices.auth_service": "src.auth_service.application",
-    "src.microservices.collection_service": "src.collection_service.application",
-    "src.microservices.processing_service": "src.processing_service.application",
-    "src.microservices.ai_service": "src.ai_service.application",
-    "src.microservices.gateway_service": "src.gateway_service.application",
-    "src.microservices.notification_service": "src.notification_service.application",
-}
-
-
 def test_microservice_entrypoints_are_http_adapters():
-    for entrypoint, application_module in ENTRYPOINTS.items():
-        module = importlib.import_module(entrypoint)
-        assert hasattr(module, "app")
-        assert module.app.state.application.__class__.__module__ == application_module
+    from src.microservices.gateway_service import app
+
+    assert hasattr(app, "state")
+    assert app.state.application.__class__.__module__ == "src.gateway_service.application"
 
 
 def test_service_dependency_manifests_exist():
-    for name in (
-        "auth-service",
-        "api-gateway",
-        "collection-service",
-        "processing-service",
-        "ai-service",
-        "notification-service",
+    service_root = Path(__file__).resolve().parent.parent
+    for path in (
+        service_root / "requirements.txt",
+        service_root / "base.txt",
+        service_root / "Dockerfile",
     ):
-        path = f"requirements/services/{name}.txt"
-        with open(path, encoding="utf-8") as handle:
-            assert handle.read().strip()
+        assert path.exists()
+        assert path.read_text(encoding="utf-8").strip()
 
 
 def test_internal_hs_token_accepts_configured_audience(test_settings):

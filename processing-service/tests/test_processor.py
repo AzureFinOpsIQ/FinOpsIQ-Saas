@@ -8,12 +8,10 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from src.collector.run import run_all
 from shared_lib.configuration import Settings
 from src.dashboard.data_loader import DashboardDataLoader
 from src.processor.anomaly_detector import AnomalyDetector
 from src.processor.normalizer import DataNormalizer, ProcessorError
-from src.processor.report_generator import ReportGenerator
 from shared_lib.domain.context import OperationContext
 from src.processor.run import _reconcile_costs, _resource_fact_document, run_processing
 from src.processor.savings_estimator import SavingsEstimator
@@ -23,14 +21,38 @@ from src.processor.waste_detector import WasteDetector
 
 @pytest.fixture
 def seeded_raw_data(test_settings: Settings) -> Path:
-    """Copy project mock data through collectors into test_settings raw path."""
-    mock_src = test_settings.project_root / "tests" / "mock_data"
+    """Seed processor raw inputs from service-local mock Azure payloads."""
+    mock_src = Path(__file__).resolve().parent / "mock_data"
     if not mock_src.exists():
         pytest.skip("Mock data directory not found")
 
-    import shared_lib.configuration as config_module
-    config_module._settings = test_settings
-    run_all(export_csv=True, continue_on_error=True)
+    test_settings.raw_path.mkdir(parents=True, exist_ok=True)
+    for source_name, raw_name in {
+        "cost_data.json": "costs_latest.json",
+        "vm_metrics.json": "vm_metrics_latest.json",
+        "aks_metrics.json": "aks_metrics_latest.json",
+        "advisor_recommendations.json": "advisor_latest.json",
+    }.items():
+        (test_settings.raw_path / raw_name).write_text(
+            (mock_src / source_name).read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
+
+    disks = json.loads((mock_src / "unattached_disks.json").read_text(encoding="utf-8"))
+    ips = json.loads((mock_src / "public_ips.json").read_text(encoding="utf-8"))
+    inventory = json.loads(
+        (mock_src / "resource_graph_inventory.json").read_text(encoding="utf-8")
+    )
+    resource_graph_payload = {
+        "metadata": disks["metadata"],
+        "unattachedDisks": disks["data"],
+        "publicIps": ips["publicIps"],
+        "resourceInventory": inventory["data"],
+    }
+    (test_settings.raw_path / "resource_graph_latest.json").write_text(
+        json.dumps(resource_graph_payload),
+        encoding="utf-8",
+    )
     return test_settings.raw_path
 
 
@@ -150,10 +172,7 @@ def test_savings_estimator(test_settings: Settings, seeded_raw_data: Path) -> No
 
 
 def test_run_processing_exports(test_settings: Settings, seeded_raw_data: Path) -> None:
-    import shared_lib.configuration as config_module
-
-    config_module._settings = test_settings
-    _, report = run_processing()
+    _, report = run_processing(settings=test_settings)
     assert report.resource_count >= 1
     assert report.raw_cost_record_count == report.cost_fact_count
     assert report.raw_totals == report.processed_totals

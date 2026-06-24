@@ -1523,7 +1523,6 @@ class FinOpsAdvisor:
         self, ctx: dict[str, Any], resources: pd.DataFrame
     ) -> str:
         summary = ctx.get("summary", {})
-        recommendations = ctx.get("recommendations", [])
         total_cost = summary.get("total_cost", {})
         if not total_cost and "total_cost_usd" in summary:
             total_cost = {"USD": summary["total_cost_usd"]}
@@ -1670,7 +1669,6 @@ class FinOpsAdvisor:
     def _rule_based_recommendations(self) -> dict[str, Any]:
         ctx = self._load_context()
         summary = ctx.get("summary", {})
-        waste = ctx.get("waste", {})
         anomalies = ctx.get("anomalies", {})
         resources: pd.DataFrame = ctx.get("resources", pd.DataFrame())
 

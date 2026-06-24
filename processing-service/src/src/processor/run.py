@@ -13,17 +13,17 @@ _ROOT = Path(__file__).resolve().parent.parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-import pandas as pd
+import pandas as pd  # noqa: E402
 
-from shared_lib.configuration import get_settings
-from shared_lib.domain.context import OperationContext
-from shared_lib.domain.models import CostFact, ProcessingRun, Recommendation, ResourceFact
-from src.processor.anomaly_detector import AnomalyDetector
-from src.processor.normalizer import DataNormalizer, ProcessorError
-from src.processor.report_generator import ReportGenerator
-from src.processor.savings_estimator import SavingsEstimator
-from src.processor.waste_detector import WasteDetector
-from shared_lib.storage.factory import create_storage_provider
+from shared_lib.configuration import get_settings  # noqa: E402
+from shared_lib.domain.context import OperationContext  # noqa: E402
+from shared_lib.domain.models import CostFact, ProcessingRun, Recommendation, ResourceFact  # noqa: E402
+from src.processor.anomaly_detector import AnomalyDetector  # noqa: E402
+from src.processor.normalizer import DataNormalizer, ProcessorError  # noqa: E402
+from src.processor.report_generator import ReportGenerator  # noqa: E402
+from src.processor.savings_estimator import SavingsEstimator  # noqa: E402
+from src.processor.waste_detector import WasteDetector  # noqa: E402
+from shared_lib.storage.factory import create_storage_provider  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -409,7 +409,7 @@ def _reconcile_costs(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="FinsOpsIQ processor")
-    args = parser.parse_args()
+    parser.parse_args()
     _, report = run_processing()
     print(f"Resources processed: {report.resource_count}")
     print(f"Waste flagged: {report.waste_count}")

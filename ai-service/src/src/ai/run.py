@@ -11,9 +11,9 @@ _ROOT = Path(__file__).resolve().parent.parent.parent
 if str(_ROOT) not in sys.path:
     sys.path.insert(0, str(_ROOT))
 
-from src.ai.advisor import FinOpsAdvisor
-from src.ai.prompts import EXAMPLE_QUESTIONS
-from shared_lib.configuration import get_settings
+from src.ai.advisor import FinOpsAdvisor  # noqa: E402
+from src.ai.prompts import EXAMPLE_QUESTIONS  # noqa: E402
+from shared_lib.configuration import get_settings  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,

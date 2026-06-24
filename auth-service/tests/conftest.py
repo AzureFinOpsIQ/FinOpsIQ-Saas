@@ -16,7 +16,8 @@ from shared_lib.configuration import Settings  # noqa: E402
 
 
 @pytest.fixture
-def test_settings(tmp_path: Path) -> Settings:
+def test_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Settings:
+    monkeypatch.setattr(Settings, "project_root", property(lambda self: _SERVICE_ROOT))
     return Settings(
         _env_file=None,
         AZURE_SUBSCRIPTION_ID="",
@@ -33,4 +34,6 @@ def test_settings(tmp_path: Path) -> Settings:
         WASTE_IDLE_CPU_THRESHOLD=5.0,
         WASTE_MIN_MONTHLY_COST=5.0,
     )
+
+
 

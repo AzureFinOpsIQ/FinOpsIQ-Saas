@@ -1,6 +1,5 @@
 """Tenant-aware AI knowledge, chat, and insight service."""
 
-from src.ai.advisor import FinOpsAdvisor
 from src.ai.rag import RAGPipeline
 from src.search.factory import create_search_provider
 from src.search.knowledge import KnowledgeService
