@@ -54,6 +54,7 @@ tfplan
 frontend/node_modules/
 frontend/.next/
 frontend/out/
+frontend/coverage/
 .pip-audit-cache/
 *.key
 tls.crt
