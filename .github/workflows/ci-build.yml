@@ -18,7 +18,7 @@ jobs:
     if: >
       github.event.pull_request.merged == true &&
       contains(github.event.pull_request.labels.*.name, 'build')
-    uses: AzureFinOpsIQ/FinOpsIQ-Workflows/.github/workflows/app-ci-build.yml@340d5943e10f94768c0be25e9a32bab225e7f5cf
+    uses: AzureFinOpsIQ/FinOpsIQ-Workflows/.github/workflows/app-ci-build.yml@bb56e0fcf7e2e1e9aef9ba7d1fdc471fe5770fb0
     with:
       acr_login_server: ${{ vars.ACR_LOGIN_SERVER }}
       helm_repository: ${{ vars.HELM_REPOSITORY || 'AzureFinOpsIQ/FinOpsIQ-Helm' }}
