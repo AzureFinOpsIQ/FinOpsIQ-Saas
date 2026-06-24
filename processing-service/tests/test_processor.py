@@ -17,6 +17,7 @@ from src.processor.run import _reconcile_costs, _resource_fact_document, run_pro
 from src.processor.savings_estimator import SavingsEstimator
 from src.processor.schemas import CANONICAL_COLUMNS, COST_FACT_COLUMNS
 from src.processor.waste_detector import WasteDetector
+from shared_lib.storage.factory import create_storage_provider
 
 
 @pytest.fixture
@@ -53,6 +54,27 @@ def seeded_raw_data(test_settings: Settings) -> Path:
         json.dumps(resource_graph_payload),
         encoding="utf-8",
     )
+    storage = create_storage_provider(test_settings)
+    tenant_id = test_settings.effective_tenant_id
+    subscription_id = test_settings.effective_subscription_id
+    collection_run_id = "test-collection-run"
+    for collector, raw_name in {
+        "costs": "costs_latest.json",
+        "vm_metrics": "vm_metrics_latest.json",
+        "resource_graph": "resource_graph_latest.json",
+        "aks_metrics": "aks_metrics_latest.json",
+        "advisor": "advisor_latest.json",
+    }.items():
+        payload = json.loads(
+            (test_settings.raw_path / raw_name).read_text(encoding="utf-8")
+        )
+        storage.raw_payloads.save(
+            tenant_id,
+            subscription_id,
+            collection_run_id,
+            collector,
+            payload,
+        )
     return test_settings.raw_path
 
 

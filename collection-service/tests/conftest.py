@@ -18,7 +18,7 @@ from shared_lib.configuration import Settings  # noqa: E402
 @pytest.fixture
 def test_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Settings:
     monkeypatch.setattr(Settings, "project_root", property(lambda self: _SERVICE_ROOT))
-    return Settings(
+    settings = Settings(
         _env_file=None,
         AZURE_SUBSCRIPTION_ID="",
         AZURE_TENANT_ID="",
@@ -26,14 +26,15 @@ def test_settings(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Settings:
         AZURE_CLIENT_SECRET="",
         AZURE_OPENAI_ENDPOINT="",
         AZURE_OPENAI_API_KEY="",
-        DATA_RAW_DIR=str(tmp_path / "raw"),
-        DATA_PROCESSED_DIR=str(tmp_path / "processed"),
-        DATA_EMBEDDINGS_DIR=str(tmp_path / "embeddings"),
-        COST_LOOKBACK_DAYS=14,
-        ANOMALY_ZSCORE_THRESHOLD=2.0,
-        WASTE_IDLE_CPU_THRESHOLD=5.0,
-        WASTE_MIN_MONTHLY_COST=5.0,
     )
+    settings.data_raw_dir = str(tmp_path / "raw")
+    settings.data_processed_dir = str(tmp_path / "processed")
+    settings.data_embeddings_dir = str(tmp_path / "embeddings")
+    settings.cost_lookback_days = 14
+    settings.anomaly_zscore_threshold = 2.0
+    settings.waste_idle_cpu_threshold = 5.0
+    settings.waste_min_monthly_cost = 5.0
+    return settings
 
 
 
