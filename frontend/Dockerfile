@@ -1,4 +1,5 @@
 FROM node:22-alpine AS dependencies
+# Rebuild marker: refresh service image tags without changing application behavior.
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN npm ci
