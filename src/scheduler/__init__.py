@@ -1,1 +1,0 @@
-"""Simple in-process scheduler."""

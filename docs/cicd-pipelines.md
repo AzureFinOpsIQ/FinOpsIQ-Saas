@@ -27,7 +27,7 @@ Trigger:
 Flow:
 
 1. Detect changed services with `dorny/paths-filter`.
-2. Run SonarCloud only for changed services.
+2. Run service lint/tests for changed services, then run one repository-level SonarCloud scan.
 3. Enforce SonarCloud Quality Gate.
 4. Run Snyk only if SonarCloud passes.
 5. No Docker image build in this pipeline.
@@ -60,7 +60,7 @@ Flow:
 2. Build only changed services.
 3. Scan each built image with Trivy.
 4. Push to ACR only if Trivy passes.
-5. Update only changed service image tags in `FinOpsIQ-Helm/charts/finopsiq/values-dev.yaml`.
+5. Update only changed service image tags in `FinOpsIQ-Helm/charts/finopsiq/dev-values.yaml`.
 
 Image tag format:
 
@@ -110,13 +110,13 @@ Release promotion does not rebuild images.
 | Filter | Paths | Services |
 |---|---|---|
 | `frontend` | `frontend/**` | frontend |
-| `api_gateway` | `api-gateway/**`, `services/api-gateway/**`, `src/gateway_service/**` | api-gateway |
-| `auth` | `auth-service/**`, `services/auth-service/**`, `src/auth_service/**`, `src/onboarding/**` | auth-service |
-| `collection` | `collection-service/**`, `services/collection-service/**`, `src/collection_service/**` | collection-service |
-| `processing` | `processing-service/**`, `services/processing-service/**`, `src/processing_service/**` | processing-service |
-| `ai` | `ai-service/**`, `services/ai-service/**`, `src/ai_service/**` | ai-service |
-| `notification` | `notification-service/**`, `services/notification-service/**`, `src/notification_service/**` | notification-service |
-| `shared` | `src/common/**`, `src/adapters/**`, `src/config/**`, `requirements*.txt` | all backend services |
+| `api_gateway` | `api-gateway/**` | api-gateway |
+| `auth` | `auth-service/**` | auth-service |
+| `collection` | `collection-service/**` | collection-service |
+| `processing` | `processing-service/**` | processing-service |
+| `ai` | `ai-service/**` | ai-service |
+| `notification` | `notification-service/**` | notification-service |
+| `shared` | `shared-lib/**, requirements/**` | all backend services |
 
 ## Service Build Matrix
 
@@ -135,7 +135,7 @@ Release promotion does not rebuild images.
 The CI Build pipeline updates:
 
 ```text
-FinOpsIQ-Helm/charts/finopsiq/values-dev.yaml
+FinOpsIQ-Helm/charts/finopsiq/dev-values.yaml
 ```
 
 Only services that were rebuilt are changed.
@@ -163,5 +163,5 @@ services:
 
 - `ACR_LOGIN_SERVER`
 - `SONAR_ORGANIZATION`
-- `SONAR_PROJECT_PREFIX`
+- `SONAR_PROJECT_KEY` optional; defaults to `<owner>_<repo>` when omitted
 - `HELM_REPOSITORY`

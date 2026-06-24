@@ -1,1 +1,0 @@
-"""Independently deployable service applications."""

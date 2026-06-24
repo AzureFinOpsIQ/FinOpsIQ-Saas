@@ -7,4 +7,5 @@ azure-mgmt-monitor==7.0.0
 azure-mgmt-compute==38.0.0
 azure-mgmt-containerservice==41.3.0
 azure-mgmt-resourcegraph==8.0.1
+pandas==2.2.3
 requests>=2.33.0,<3

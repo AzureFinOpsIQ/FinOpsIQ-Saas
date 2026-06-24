@@ -18,7 +18,7 @@ AzureFinOpsIQ/FinOpsIQ-Helm
 
 ```text
 frontend/                 Next.js web application
-src/                      Python application source and shared libraries
+shared-lib/               Internal shared Python package`r`n*-service/src/           Service-owned Python source
 services/
   api-gateway/            API gateway container definition
   auth-service/           Authentication service container definition
@@ -34,7 +34,7 @@ docker-compose.yml        Local Docker Compose runtime
 
 ## Container standards
 
-Each backend microservice has its own Dockerfile under `services/<service>/Dockerfile`.
+Each backend microservice has its own Dockerfile under `<service>/Dockerfile`.
 
 All backend service Dockerfiles are:
 
