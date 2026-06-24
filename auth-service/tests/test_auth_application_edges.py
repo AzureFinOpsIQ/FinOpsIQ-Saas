@@ -14,7 +14,7 @@ from shared_lib.storage.factory import create_storage_provider
 from src.auth.entra import AuthSession, UserProfile
 from src.auth_service.application import FLOW_COOKIE, AuthApplicationService
 from src.compliance.lifecycle import TenantLifecycleService
-from src.onboarding.azure_access import DiscoveredSubscription, ValidationCheck
+from src.onboarding.azure_access import DiscoveredSubscription
 
 
 class Events:
