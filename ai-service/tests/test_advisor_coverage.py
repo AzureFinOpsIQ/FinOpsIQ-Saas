@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 from shared_lib.configuration import Settings
 from src.ai.advisor import FinOpsAdvisor
