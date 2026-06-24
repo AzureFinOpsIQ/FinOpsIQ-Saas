@@ -4,7 +4,6 @@ from types import SimpleNamespace
 
 import pytest
 
-from shared_lib.configuration import Settings
 from shared_lib.domain.models import AzureSubscription, Tenant
 from shared_lib.storage.factory import create_storage_provider
 from src.collection_service.application import CollectionApplicationService, scheduler_loop
@@ -117,7 +116,6 @@ def test_collect_subscription_records_failure_and_partial_results_do_not_forward
 def test_forward_event_skips_service_bus_and_logs_http_failures(test_settings, monkeypatch):
     application = app(test_settings)
     service = CollectionApplicationService(application, run_all_func=lambda **kwargs: report())
-    event = application.state.events.published[0] if application.state.events.published else None
 
     application.state.settings.event_provider = "service_bus"
     service._forward_event_for_local_compose(SimpleNamespace(model_dump=lambda **kwargs: {}))
