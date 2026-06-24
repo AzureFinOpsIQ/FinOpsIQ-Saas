@@ -28,7 +28,7 @@ permissions:
 jobs:
   ci-scan:
     name: Reusable CI Scan
-    uses: AzureFinOpsIQ/FinOpsIQ-Workflows/.github/workflows/app-ci-scan.yml@5cd84c7cce95ea3a705478caecc1af3274d1314e
+    uses: AzureFinOpsIQ/FinOpsIQ-Workflows/.github/workflows/app-ci-scan.yml@cb87ddd8788c14dc8391b93c790792b24cd9564d
     with:
       sonar_organization: ${{ vars.SONAR_ORGANIZATION }}
     secrets:

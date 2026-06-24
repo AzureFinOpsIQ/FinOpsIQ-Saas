@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import base64
+import json
+
 import jwt
 from fastapi import FastAPI, HTTPException, Request
 
@@ -9,6 +12,39 @@ from shared_lib.web.middleware import ApiMetrics, ObservabilityMiddleware
 from shared_lib.configuration import get_settings
 from shared_lib.observability import configure_observability
 from shared_lib.storage.factory import create_storage_provider
+
+
+def _jwt_claims_for_key_discovery(token: str) -> dict:
+    """Read JWT payload fields only to discover the Entra signing-key endpoint.
+
+    The returned claims are deliberately not trusted for authentication or
+    authorization. The caller must still validate the token signature,
+    audience, and required claims before accepting the request.
+    """
+
+    parts = token.split(".")
+    if len(parts) < 2:
+        raise jwt.InvalidTokenError("Malformed JWT")
+
+    payload = parts[1]
+    padded_payload = payload + ("=" * (-len(payload) % 4))
+    try:
+        decoded = base64.urlsafe_b64decode(padded_payload.encode("ascii"))
+        claims = json.loads(decoded.decode("utf-8"))
+    except (ValueError, UnicodeDecodeError) as exc:
+        raise jwt.InvalidTokenError("Invalid JWT payload") from exc
+
+    if not isinstance(claims, dict):
+        raise jwt.InvalidTokenError("JWT payload must be an object")
+    return claims
+
+
+def _entra_tenant_for_key_discovery(token: str) -> str:
+    claims = _jwt_claims_for_key_discovery(token)
+    tenant_id = str(claims.get("tid") or "organizations")
+    if not tenant_id.replace("-", "").replace(".", "").isalnum():
+        raise jwt.InvalidTokenError("Invalid Entra tenant identifier")
+    return tenant_id
 
 
 def service_app(name: str, *, storage=None) -> FastAPI:
@@ -71,8 +107,7 @@ def require_internal(request: Request) -> dict:
             except jwt.PyJWTError:
                 pass
 
-        unverified = jwt.decode(token, options={"verify_signature": False})
-        tenant_id = str(unverified.get("tid", "organizations"))
+        tenant_id = _entra_tenant_for_key_discovery(token)
         keys = jwt.PyJWKClient(
             f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
         )
