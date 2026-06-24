@@ -56,6 +56,11 @@ PHRASES = {
         "more cost": 4,
         "cost more": 4,
         "cost trend": 4,
+        "cost spike": 7,
+        "costs spike": 7,
+        "cost anomaly": 7,
+        "cost anomalies": 7,
+        "why did costs spike": 8,
         "last month": 2,
         "over time": 2,
     },
@@ -151,6 +156,10 @@ WORDS = {
         "charges": 3,
         "price": 2,
         "prices": 2,
+        "spike": 5,
+        "spikes": 5,
+        "anomaly": 5,
+        "anomalies": 5,
     },
     "recommendation": {
         "recommend": 4,
@@ -251,6 +260,7 @@ def classify_intent(question: str) -> IntentClassification:
         scores["knowledge_advisory"] >= 5
         and any(term in tokens for term in {"why", "explain", "compare", "roadmap", "advisor"})
         and any(term in tokens for term in {"cost", "costs", "expensive", "spend", "aks", "networking", "azure"})
+        and not any(term in tokens for term in {"spike", "spikes", "anomaly", "anomalies"})
     ):
         scores["knowledge_advisory"] += 4
 

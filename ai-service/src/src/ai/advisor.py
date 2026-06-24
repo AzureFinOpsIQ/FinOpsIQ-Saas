@@ -428,6 +428,17 @@ class FinOpsAdvisor:
         )
 
     def _answer_cost_analysis(self, question: str, classification: Any) -> str:
+        q = question.lower()
+        if "spike" in q or "anomal" in q:
+            return self._with_debug(
+                self._answer_cost_spike(self._load_context().get("anomalies", {})),
+                [
+                    f"Detected intent: {classification.intent}",
+                    "Route selected: cost_analysis",
+                    "Retrieval source: processed anomaly facts",
+                ],
+            )
+
         context = self._load_repository_context()
         facts = context["costFacts"]
         resources = context["resources"]
@@ -485,7 +496,6 @@ class FinOpsAdvisor:
 
         ranked = sorted(totals.values(), key=lambda item: item["cost"], reverse=True)
         top_n = self._requested_top_n(question)
-        q = question.lower()
 
         lines = [
             "Top Cost Drivers",
