@@ -1,5 +1,4 @@
 ﻿FROM python:3.11-slim-bookworm AS builder
-# Rebuild marker: refresh service image tags without changing application behavior.
 WORKDIR /build
 COPY base.txt ./base.txt
 COPY shared-lib/ ./shared-lib/
