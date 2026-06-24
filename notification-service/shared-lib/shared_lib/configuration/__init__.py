@@ -96,22 +96,21 @@ class Settings(BaseSettings):
         default="api://azure-cost-advisor-services",
         alias="INTERNAL_API_AUDIENCE",
     )
+    # Sonar accepted risk: internal service DNS URLs use HTTP inside the private Docker/Kubernetes network.
     auth_service_url: str = Field(
-        default="http://auth-service:8000", alias="AUTH_SERVICE_URL"
-    )
+        default="http://auth-service:8000", alias="AUTH_SERVICE_URL")  # NOSONAR
     collection_service_url: str = Field(
-        default="http://collection-service:8000",
+        default="http://collection-service:8000",  # NOSONAR
         alias="COLLECTION_SERVICE_URL",
     )
     processing_service_url: str = Field(
-        default="http://processing-service:8000",
+        default="http://processing-service:8000",  # NOSONAR
         alias="PROCESSING_SERVICE_URL",
     )
     ai_service_url: str = Field(
-        default="http://ai-service:8000", alias="AI_SERVICE_URL"
-    )
+        default="http://ai-service:8000", alias="AI_SERVICE_URL")  # NOSONAR
     notification_service_url: str = Field(
-        default="http://notification-service:8000",
+        default="http://notification-service:8000",  # NOSONAR
         alias="NOTIFICATION_SERVICE_URL",
     )
     api_rate_limit_per_minute: int = Field(
@@ -279,3 +278,5 @@ def get_settings() -> Settings:
         _settings = Settings()
         _settings.ensure_data_dirs()
     return _settings
+
+
