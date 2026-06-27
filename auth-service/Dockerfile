@@ -1,6 +1,5 @@
 ﻿FROM python:3.11-slim-bookworm AS builder
 WORKDIR /build
-# Rebuild marker: refresh service image without changing runtime behavior.
 COPY base.txt ./base.txt
 COPY shared-lib/ ./shared-lib/
 COPY requirements.txt ./requirements.txt
