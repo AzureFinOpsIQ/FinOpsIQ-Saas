@@ -31,7 +31,7 @@ def _jwt_claims_for_key_discovery(token: str) -> dict:
     try:
         decoded = base64.urlsafe_b64decode(padded_payload.encode("ascii"))
         claims = json.loads(decoded.decode("utf-8"))
-    except (ValueError, UnicodeDecodeError) as exc:
+    except ValueError as exc:
         raise jwt.InvalidTokenError("Invalid JWT payload") from exc
 
     if not isinstance(claims, dict):
@@ -74,7 +74,7 @@ def service_app(name: str, *, storage=None) -> FastAPI:
     def live():
         return {"status": "alive", "service": name}
 
-    @app.get("/health/ready")
+    @app.get("/health/ready", responses={503: {"description": "Dependency unavailable"}})
     def ready():
         try:
             if settings.storage_provider == "cosmos":
@@ -112,14 +112,17 @@ def require_internal(request: Request) -> dict:
             f"https://login.microsoftonline.com/{tenant_id}/discovery/v2.0/keys"
         )
         signing_key = keys.get_signing_key_from_jwt(token)
+        valid_audiences = [settings.internal_api_audience]
+        if settings.internal_api_client_id:
+            valid_audiences.append(settings.internal_api_client_id)
         return jwt.decode(
             token,
             signing_key.key,
             algorithms=["RS256"],
-            audience=settings.internal_api_audience,
+            audience=valid_audiences,
             options={"require": ["exp", "iat", "aud"]},
         )
     except jwt.PyJWTError as exc:
         import logging
-        logging.getLogger(__name__).error(f"PyJWTError: {exc}")
+        logging.exception("PyJWTError: %s", exc)
         raise HTTPException(401, "Invalid service token") from exc

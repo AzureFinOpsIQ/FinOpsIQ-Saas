@@ -96,6 +96,7 @@ class Settings(BaseSettings):
         default="api://azure-cost-advisor-services",
         alias="INTERNAL_API_AUDIENCE",
     )
+    internal_api_client_id: str = Field(default="", alias="INTERNAL_API_CLIENT_ID")
     # Sonar accepted risk: internal service DNS URLs use HTTP inside the private Docker/Kubernetes network.
     auth_service_url: str = Field(
         default="http://auth-service:8000", alias="AUTH_SERVICE_URL")  # NOSONAR
