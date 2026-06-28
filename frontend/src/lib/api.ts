@@ -1,7 +1,15 @@
-const API = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+const API = trimTrailingSlashes(process.env.NEXT_PUBLIC_API_URL ?? "");
+
+function trimTrailingSlashes(value: string) {
+  let end = value.length;
+  while (end > 0 && value[end - 1] === "/") {
+    end -= 1;
+  }
+  return value.slice(0, end);
+}
 
 export function apiUrl(path: string, base = API) {
-  const normalizedBase = base.replace(/\/+$/, "");
+  const normalizedBase = trimTrailingSlashes(base);
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   if (normalizedBase.endsWith("/api") && normalizedPath.startsWith("/api/")) {
     return `${normalizedBase}${normalizedPath.slice(4)}`;
@@ -29,10 +37,6 @@ export async function api<T>(
     cache: "no-store",
   });
   if (!response.ok) {
-    if (response.status === 401 && typeof window !== "undefined") {
-      window.location.href = apiUrl("/api/auth/logout");
-      return new Promise(() => {}) as Promise<T>;
-    }
     const detail = await response.text();
     throw new Error(detail || `Request failed: ${response.status}`);
   }

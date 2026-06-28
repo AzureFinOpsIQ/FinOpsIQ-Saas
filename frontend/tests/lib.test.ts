@@ -59,22 +59,4 @@ describe("frontend utilities", () => {
 
     await expect(api("/api/costs/summary")).rejects.toThrow("upstream failed");
   });
-
-  it("redirects to logout without duplicating the API prefix on authentication failures", async () => {
-    Object.defineProperty(window, "location", {
-      configurable: true,
-      value: { href: "" },
-    });
-    vi.spyOn(globalThis, "fetch").mockResolvedValue({
-      ok: false,
-      status: 401,
-      text: async () => "Authentication required",
-    } as Response);
-
-    void api("/api/auth/me");
-    await Promise.resolve();
-    await Promise.resolve();
-
-    expect(window.location.href).toBe("/api/auth/logout");
-  });
 });
