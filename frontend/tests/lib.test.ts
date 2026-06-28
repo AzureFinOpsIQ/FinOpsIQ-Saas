@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { api, loginUrl, logoutUrl } from "@/lib/api";
+import { api, apiUrl, loginUrl, logoutUrl } from "@/lib/api";
 import { cn, money } from "@/lib/utils";
 
 describe("frontend utilities", () => {
@@ -20,6 +20,12 @@ describe("frontend utilities", () => {
   it("builds auth endpoint URLs from the configured API base", () => {
     expect(loginUrl).toBe("/api/auth/login");
     expect(logoutUrl).toBe("/api/auth/logout");
+    expect(apiUrl("/api/auth/login", "https://azurefinopsiq.site/api")).toBe(
+      "https://azurefinopsiq.site/api/auth/login",
+    );
+    expect(apiUrl("/api/auth/login", "https://azurefinopsiq.site")).toBe(
+      "https://azurefinopsiq.site/api/auth/login",
+    );
   });
 
   it("adds tenant and subscription headers to API requests", async () => {
