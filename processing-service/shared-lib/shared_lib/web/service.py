@@ -31,7 +31,7 @@ def _jwt_claims_for_key_discovery(token: str) -> dict:
     try:
         decoded = base64.urlsafe_b64decode(padded_payload.encode("ascii"))
         claims = json.loads(decoded.decode("utf-8"))
-    except (ValueError, UnicodeDecodeError) as exc:
+    except ValueError as exc:
         raise jwt.InvalidTokenError("Invalid JWT payload") from exc
 
     if not isinstance(claims, dict):
@@ -74,7 +74,7 @@ def service_app(name: str, *, storage=None) -> FastAPI:
     def live():
         return {"status": "alive", "service": name}
 
-    @app.get("/health/ready")
+    @app.get("/health/ready", responses={503: {"description": "Dependency unavailable"}})
     def ready():
         try:
             if settings.storage_provider == "cosmos":
@@ -124,5 +124,5 @@ def require_internal(request: Request) -> dict:
         )
     except jwt.PyJWTError as exc:
         import logging
-        logging.getLogger(__name__).error(f"PyJWTError: {exc}")
+        logging.exception("PyJWTError: %s", exc)
         raise HTTPException(401, "Invalid service token") from exc
