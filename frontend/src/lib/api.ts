@@ -1,4 +1,13 @@
-const API = process.env.NEXT_PUBLIC_API_URL ?? "";
+const API = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+
+export function apiUrl(path: string, base = API) {
+  const normalizedBase = base.replace(/\/+$/, "");
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  if (normalizedBase.endsWith("/api") && normalizedPath.startsWith("/api/")) {
+    return `${normalizedBase}${normalizedPath.slice(4)}`;
+  }
+  return `${normalizedBase}${normalizedPath}`;
+}
 
 export type Scope = { tenantId: string; subscriptionId: string };
 
@@ -13,7 +22,7 @@ export async function api<T>(
   if (scope?.subscriptionId) {
     headers.set("X-Subscription-ID", scope.subscriptionId);
   }
-  const response = await fetch(`${API}${path}`, {
+  const response = await fetch(apiUrl(path), {
     ...init,
     headers,
     credentials: "include",
@@ -21,7 +30,7 @@ export async function api<T>(
   });
   if (!response.ok) {
     if (response.status === 401 && typeof window !== "undefined") {
-      window.location.href = `${API}/api/auth/logout`;
+      window.location.href = apiUrl("/api/auth/logout");
       return new Promise(() => {}) as Promise<T>;
     }
     const detail = await response.text();
@@ -30,5 +39,5 @@ export async function api<T>(
   return response.json() as Promise<T>;
 }
 
-export const loginUrl = `${API}/api/auth/login`;
-export const logoutUrl = `${API}/api/auth/logout`;
+export const loginUrl = apiUrl("/api/auth/login");
+export const logoutUrl = apiUrl("/api/auth/logout");

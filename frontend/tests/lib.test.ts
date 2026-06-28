@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { api, loginUrl, logoutUrl } from "@/lib/api";
+import { api, apiUrl, loginUrl, logoutUrl } from "@/lib/api";
 import { cn, money } from "@/lib/utils";
 
 describe("frontend utilities", () => {
@@ -20,6 +20,12 @@ describe("frontend utilities", () => {
   it("builds auth endpoint URLs from the configured API base", () => {
     expect(loginUrl).toBe("/api/auth/login");
     expect(logoutUrl).toBe("/api/auth/logout");
+    expect(apiUrl("/api/auth/login", "https://azurefinopsiq.site/api")).toBe(
+      "https://azurefinopsiq.site/api/auth/login",
+    );
+    expect(apiUrl("/api/auth/login", "https://azurefinopsiq.site")).toBe(
+      "https://azurefinopsiq.site/api/auth/login",
+    );
   });
 
   it("adds tenant and subscription headers to API requests", async () => {
@@ -52,5 +58,23 @@ describe("frontend utilities", () => {
     } as Response);
 
     await expect(api("/api/costs/summary")).rejects.toThrow("upstream failed");
+  });
+
+  it("redirects to logout without duplicating the API prefix on authentication failures", async () => {
+    Object.defineProperty(window, "location", {
+      configurable: true,
+      value: { href: "" },
+    });
+    vi.spyOn(globalThis, "fetch").mockResolvedValue({
+      ok: false,
+      status: 401,
+      text: async () => "Authentication required",
+    } as Response);
+
+    void api("/api/auth/me");
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(window.location.href).toBe("/api/auth/logout");
   });
 });
